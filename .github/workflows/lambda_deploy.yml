@@ -19,7 +19,7 @@ jobs:
         uses: imehedi/actions-awscli-v2@latest
         with:
           args: |
-            lambda update-function-code
+            update-function-code
             --function-name arn:aws:lambda:us-east-1:907705923372:function:CognitoLambda
             --zip-file fileb://lambda.zip
         env:
