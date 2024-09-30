@@ -1,0 +1,28 @@
+name: Deploy Lambda Function
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone the repository
+        uses: actions/checkout@v2
+      - name: Install Zip tool
+        uses: montudor/action-zip@v1
+      - name: Zip the Lambda Function
+        run: zip -r lambda.zip ./lambda_function.py
+      - name: Install and run AWS CLI v2
+        uses: imehedi/actions-awscli-v2@latest
+        with:
+          args: |
+            lambda update-function-code
+            --function-name arn:aws:lambda:us-east-1:907705923372:function:CognitoLambda
+            --zip-file fileb://lambda.zip
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: "us-east-1"
